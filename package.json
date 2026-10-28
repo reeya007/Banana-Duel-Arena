@@ -1,0 +1,35 @@
+{
+  "name": "banana-duel-arena",
+  "version": "1.0.0",
+  "description": "Banana Duel Arena is a project focused on creating an interactive and engaging duel arena experience.",
+  "main": "server/app.js",  
+  "directories": {
+  "doc": "docs",
+  "test": "tests"
+  },
+  "scripts": {
+  "start": "node server/app.js"
+},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reeya007/Banana-Duel-Arena.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/reeya007/Banana-Duel-Arena/issues"
+  },
+  "homepage": "https://github.com/reeya007/Banana-Duel-Arena#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "better-sqlite3": "^13.0.3",
+    "connect-sqlite3": "^0.9.18",
+    "dotenv": "^18.0.9",
+    "express": "^4.22.3",
+    "express-rate-limit": "^8.7.1",
+    "express-session": "^1.19.0",
+    "express-validator": "^7.3.2",
+    "helmet": "^8.3.0"
+  }
+}

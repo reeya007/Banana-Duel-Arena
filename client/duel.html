@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Duel</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <h1>⚔️ Duel</h1>
+  <a href="home.html">← Back to home</a>
+  <hr>
+  <button id="find-btn">Quick match</button>
+  <p id="status"></p>
+
+  <div id="arena" hidden>
+    <p id="scoreboard"></p>
+    <p id="round-info"></p>
+    <p id="timer"></p>
+    <img id="puzzle" alt="Banana puzzle" width="400">
+    <br>
+    <input id="answer" type="number" min="0" max="9" placeholder="0-9">
+    <button id="submit-btn">Submit</button>
+    <p id="opponent"></p>
+    <p id="feedback"></p>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="js/duel.js"></script>
+</body>
+</html>

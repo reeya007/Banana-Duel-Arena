@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,
+  rating INTEGER DEFAULT 1000,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS matches (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  player1_id INTEGER, player2_id INTEGER, winner_id INTEGER,
+  p1_score INTEGER, p2_score INTEGER, mode TEXT,
+  started_at DATETIME, ended_at DATETIME
+);
+CREATE TABLE IF NOT EXISTS rounds (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  match_id INTEGER REFERENCES matches(id),
+  round_no INTEGER, winner_id INTEGER, time_ms INTEGER, puzzle_url TEXT
+);

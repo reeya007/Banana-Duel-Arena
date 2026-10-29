@@ -34,6 +34,7 @@ app.use(session({
 }));
 
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/practice', require('./routes/practice'));
 
 // Protected page: redirect to login if there is no session 
 app.get('/home.html', (req, res, next) => {

@@ -2,13 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Home</title>
+  <title>Practice</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <h1>Home</h1>
+  <h1>Practice mode</h1>
   <p id="welcome"></p>
   <button id="logout-btn">Log out</button>
+  <hr>
+  <button id="new-puzzle-btn">New puzzle</button>
+  <p id="status"></p>
+  <img id="puzzle" alt="Banana puzzle" width="400">
+  <br>
+  <input id="answer" type="number" min="0" max="9" placeholder="0-9">
+  <button id="submit-btn">Submit</button>
+  <p id="result"></p>
   <script src="js/ui.js"></script>
+  <script src="js/practice.js"></script>
 </body>
 </html>

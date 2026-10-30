@@ -38,6 +38,7 @@ app.use(sessionMiddleware);
 
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/practice', require('./routes/practice'));
+app.use('/api/leaderboard', require('./routes/leaderboard'));
 
 // Protected pages: redirect to login if there is no session (must come before static files)
 app.get(['/home.html', '/duel.html'], (req, res, next) => {

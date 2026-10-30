@@ -1,6 +1,5 @@
-// Holds the state of ONE match: scores, current solution, timers and lockouts.
-// The solution only ever exists here, in server memory.
 const { getPuzzle } = require('../services/bananaService');
+const { saveMatchResult } = require('./saveResult');
 
 const ROUND_MS = 30000;   // 30 second limit per round
 const LOCK_MS = 3000;     // lockout after a wrong answer
@@ -21,10 +20,13 @@ class Match {
     }));
     this.round = 0;
     this.solution = null;
+    this.puzzleUrl = null;
     this.roundActive = false;
     this.roundStart = 0;
     this.timer = null;
     this.ended = false;
+    this.startedAt = Date.now();
+    this.roundLog = []; // saved to the rounds table when the match ends
     socketA.join(roomId);
     socketB.join(roomId);
   }
@@ -50,6 +52,7 @@ class Match {
       const puzzle = await getPuzzle();
       if (this.ended) return;
       this.solution = puzzle.solution;          // stays on the server
+      this.puzzleUrl = puzzle.image;
       this.roundActive = true;
       this.roundStart = Date.now();
       this.players.forEach((p) => { p.lockedUntil = 0; });
@@ -100,6 +103,14 @@ class Match {
     clearTimeout(this.timer);
     if (winnerIdx !== null) this.players[winnerIdx].score++;
 
+    // Remember this round so it can be saved when the match ends
+    this.roundLog.push({
+      round_no: this.round,
+      winner_id: winnerIdx === null ? null : this.players[winnerIdx].userId,
+      time_ms: Date.now() - this.roundStart,
+      puzzle_url: this.puzzleUrl,
+    });
+
     this.io.to(this.roomId).emit('round:end', {
       winner: winnerIdx === null ? null : this.players[winnerIdx].username,
       scores: this.scores(),
@@ -125,12 +136,35 @@ class Match {
     this.roundActive = false;
     clearTimeout(this.timer);
 
-    let winner = null;
     const [a, b] = this.players;
-    if (forcedWinnerIdx !== null) winner = this.players[forcedWinnerIdx].username;
-    else if (a.score !== b.score) winner = a.score > b.score ? a.username : b.username;
+    let winnerIdx = null;
+    if (forcedWinnerIdx !== null) winnerIdx = forcedWinnerIdx;
+    else if (a.score !== b.score) winnerIdx = a.score > b.score ? 0 : 1;
 
-    this.io.to(this.roomId).emit('match:end', { winner, scores: this.scores(), reason });
+    // Save the match, rounds and new ratings
+    let result = null;
+    try {
+      result = saveMatchResult({
+        players: this.players,
+        winnerIdx,
+        mode: 'quick',
+        startedAt: this.startedAt,
+        rounds: this.roundLog,
+      });
+    } catch (err) {
+      console.error('[DB] could not save match result:', err.message);
+    }
+
+    const winner = winnerIdx === null ? null : this.players[winnerIdx].username;
+    this.players.forEach((p, i) => {
+      this.io.to(p.socketId).emit('match:end', {
+        winner,
+        scores: this.scores(),
+        reason,
+        ratingChange: result ? (i === 0 ? result.changeA : result.changeB) : null,
+        newRating: result ? (i === 0 ? result.newA : result.newB) : null,
+      });
+    });
     this.onEnd(this);
   }
 }

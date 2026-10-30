@@ -86,14 +86,18 @@ socket.on('round:end', ({ winner, scores, solution }) => {
 
 socket.on('api:error', ({ message }) => { $('status').textContent = message; });
 
-socket.on('match:end', ({ winner, scores, reason }) => {
+socket.on('match:end', ({ winner, scores, reason, ratingChange, newRating }) => {
   clearInterval(countdown);
   setInputEnabled(false);
   showScores(scores);
   $('timer').textContent = '';
-  $('status').textContent = winner
-    ? `🏆 Match over! Winner: ${winner}` + (reason === 'opponent left' ? ' (opponent left)' : '')
+  let text = winner
+    ? `Match over! Winner: ${winner}` + (reason === 'opponent left' ? ' (opponent left)' : '')
     : 'Match over: it is a draw.';
+  if (ratingChange !== null) {
+    text += ` | Rating: ${newRating} (${ratingChange >= 0 ? '+' : ''}${ratingChange})`;
+  }
+  $('status').textContent = text;
   $('find-btn').disabled = false;
 });
 

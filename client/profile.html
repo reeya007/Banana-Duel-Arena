@@ -2,18 +2,37 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Profile | Banana Duel Arena</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍌</text></svg>">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <h1 id="name">Profile</h1>
-  <a href="home.html">← Back to home</a>
-  <p id="summary"></p>
-  <table border="1" cellpadding="6">
-    <thead><tr><th>Opponent</th><th>Result</th><th>Score</th><th>Date</th></tr></thead>
-    <tbody id="rows"></tbody>
-  </table>
-  <p id="message"></p>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="home.html">🍌 Banana Duel Arena</a>
+      <a class="link" href="home.html">Practice</a>
+      <a class="link" href="duel.html">Duel</a>
+      <a class="link" href="leaderboard.html">Leaderboard</a>
+      <a class="link active" href="profile.html">Profile</a>
+      <span id="welcome"></span>
+      <button id="logout-btn" class="btn-ghost">Log out</button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <h1 id="name">Profile</h1>
+    <p id="summary" class="summary"></p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Opponent</th><th>Result</th><th>Score</th><th>Date</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <p id="message" class="msg"></p>
+  </main>
+
+  <script src="js/ui.js"></script>
   <script src="js/profile.js"></script>
 </body>
 </html>

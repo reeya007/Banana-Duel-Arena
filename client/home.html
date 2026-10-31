@@ -2,24 +2,45 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Practice</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Practice | Banana Duel Arena</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍌</text></svg>">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <h1>Practice mode</h1>
-  <p id="welcome"></p>
-  <button id="logout-btn">Log out</button>
-  <p><a href="duel.html">Play a duel (quick match)</a></p>
-  <p><a href="leaderboard.html">Leaderboard</a></p>
-  <p><a href="profile.html">My profile</a></p>
-  <hr>
-  <button id="new-puzzle-btn">New puzzle</button>
-  <p id="status"></p>
-  <img id="puzzle" alt="Banana puzzle" width="400">
-  <br>
-  <input id="answer" type="number" min="0" max="9" placeholder="0-9">
-  <button id="submit-btn">Submit</button>
-  <p id="result"></p>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="home.html">🍌 Banana Duel Arena</a>
+      <a class="link active" href="home.html">Practice</a>
+      <a class="link" href="duel.html">Duel</a>
+      <a class="link" href="leaderboard.html">Leaderboard</a>
+      <a class="link" href="profile.html">Profile</a>
+      <span id="welcome"></span>
+      <button id="logout-btn" class="btn-ghost">Log out</button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="card center">
+      <h1>Practice mode</h1>
+      <p class="subtitle">Work out the digit hidden behind the banana. No rating change.</p>
+      <button id="new-puzzle-btn" class="btn-secondary">New puzzle</button>
+      <p id="status" class="status-line"></p>
+      <div class="puzzle-box"><img id="puzzle" alt="Banana puzzle"></div>
+      <div class="answer-row">
+        <input id="answer" type="number" min="0" max="9" placeholder="0-9">
+        <button id="submit-btn">Submit</button>
+      </div>
+      <p id="result" class="result-line"></p>
+    </div>
+
+    <div class="tiles">
+      <a class="tile" href="duel.html"><strong>Play a duel</strong><span>Race another player live</span></a>
+      <a class="tile" href="leaderboard.html"><strong>Leaderboard</strong><span>See the top 20 players</span></a>
+      <a class="tile" href="profile.html"><strong>My profile</strong><span>Rating and match history</span></a>
+    </div>
+  </main>
+
   <script src="js/ui.js"></script>
   <script src="js/practice.js"></script>
 </body>

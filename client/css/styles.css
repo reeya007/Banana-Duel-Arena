@@ -1,2 +1,144 @@
-body { font-family: sans-serif; max-width: 500px; margin: 40px auto; padding: 0 16px; }
-input, button { padding: 8px; margin: 4px 0; }
+/* Banana Duel Arena theme: yellow, dark navy, white cards. Code drafted with help from Claude (Anthropic AI). */
+:root {
+  --yellow: #ffd84d;
+  --yellow-dark: #f5b800;
+  --ink: #1f2430;
+  --muted: #6b7280;
+  --bg: #fffbea;
+  --card: #ffffff;
+  --border: #f1e4a6;
+  --radius: 16px;
+  --shadow: 0 8px 24px rgba(31, 36, 48, 0.08);
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Segoe UI', system-ui, -apple-system, Roboto, Arial, sans-serif;
+  color: var(--ink);
+  line-height: 1.5;
+  background: radial-gradient(circle at top, #fff3b0 0, var(--bg) 45%);
+}
+
+h1 { font-size: 2rem; margin: 0 0 6px; }
+h2 { margin: 0 0 6px; }
+.subtitle { color: var(--muted); margin: 0 0 18px; }
+.center { text-align: center; }
+
+/* ---------- Navigation bar ---------- */
+.nav { background: var(--ink); position: sticky; top: 0; z-index: 10; }
+.nav-inner {
+  max-width: 900px; margin: 0 auto; padding: 12px 20px;
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.brand {
+  font-weight: 800; font-size: 1.15rem; color: var(--yellow);
+  text-decoration: none; margin-right: auto;
+}
+.nav a.link {
+  color: #e5e7eb; text-decoration: none; padding: 6px 14px;
+  border-radius: 999px; font-weight: 600; font-size: 0.95rem;
+}
+.nav a.link:hover { background: rgba(255, 255, 255, 0.12); }
+.nav a.link.active { background: var(--yellow); color: var(--ink); }
+#welcome { color: #d1d5db; font-size: 0.9rem; margin-left: 8px; }
+
+/* ---------- Layout ---------- */
+.container { max-width: 760px; margin: 0 auto; padding: 28px 20px 60px; }
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px;
+}
+.card + .card { margin-top: 18px; }
+
+/* ---------- Buttons and inputs ---------- */
+button {
+  font: inherit; font-weight: 700; border: 0; border-radius: 12px;
+  padding: 10px 18px; cursor: pointer; background: var(--yellow); color: var(--ink);
+  transition: transform 0.08s, background 0.15s;
+}
+button:hover:not(:disabled) { background: var(--yellow-dark); transform: translateY(-1px); }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-secondary { background: transparent; border: 2px solid var(--ink); color: var(--ink); }
+.btn-secondary:hover:not(:disabled) { background: var(--ink); color: #fff; }
+.btn-ghost { background: rgba(255, 255, 255, 0.12); color: #fff; }
+.btn-ghost:hover:not(:disabled) { background: rgba(255, 255, 255, 0.25); }
+.btn-big { font-size: 1.15rem; padding: 14px 32px; }
+
+input {
+  font: inherit; width: 100%; padding: 11px 14px; color: var(--ink);
+  background: #fff; border: 2px solid var(--border); border-radius: 12px;
+}
+input:focus { outline: none; border-color: var(--yellow-dark); box-shadow: 0 0 0 4px rgba(255, 216, 77, 0.35); }
+input:disabled { background: #f3f4f6; }
+
+.stack { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+.row { display: flex; gap: 10px; }
+.row > * { flex: 1; }
+.msg { min-height: 1.5em; margin: 14px 0 0; font-weight: 600; color: var(--muted); }
+
+/* ---------- Login page ---------- */
+.auth-wrap { min-height: 100vh; display: grid; place-items: center; padding: 20px; }
+.auth-card { width: 100%; max-width: 400px; text-align: center; }
+.logo { font-size: 3.5rem; line-height: 1; margin-bottom: 8px; }
+
+/* ---------- Puzzle and answer ---------- */
+.puzzle-box {
+  background: #fff; border: 2px dashed var(--border); border-radius: 14px;
+  padding: 12px; margin: 14px 0;
+}
+.puzzle-box img { display: block; margin: 0 auto; width: 440px; max-width: 100%; height: auto; border-radius: 8px; }
+#puzzle:not([src]) { display: none; }
+.answer-row { display: flex; gap: 10px; max-width: 320px; margin: 0 auto; }
+.answer-row input { text-align: center; font-size: 1.3rem; font-weight: 800; }
+.status-line { text-align: center; font-weight: 700; min-height: 1.6em; margin: 12px 0 0; }
+.result-line { text-align: center; font-weight: 800; font-size: 1.1rem; min-height: 1.6em; margin: 14px 0 0; }
+
+/* ---------- Duel ---------- */
+.chips { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 0 0 18px; }
+.chip { background: #fff3b0; border-radius: 999px; padding: 4px 14px; font-size: 0.85rem; font-weight: 700; }
+.scoreboard {
+  text-align: center; font-size: 1.25rem; font-weight: 800; color: var(--yellow);
+  background: var(--ink); border-radius: 12px; padding: 12px; margin: 0 0 12px;
+}
+.round-info { text-align: center; font-weight: 700; color: var(--muted); margin: 0; }
+.timer { text-align: center; font-size: 1.6rem; font-weight: 800; margin: 4px 0; }
+.note { text-align: center; color: var(--muted); font-weight: 600; min-height: 1.4em; margin: 10px 0 0; }
+.feedback { text-align: center; font-weight: 800; min-height: 1.4em; margin: 10px 0 0; }
+
+/* ---------- Tiles on the home page ---------- */
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-top: 18px; }
+.tile {
+  display: block; text-decoration: none; color: var(--ink); background: #fff;
+  border: 1px solid var(--border); border-radius: var(--radius); padding: 18px;
+  box-shadow: var(--shadow); transition: transform 0.1s;
+}
+.tile:hover { transform: translateY(-3px); }
+.tile strong { display: block; font-size: 1.05rem; }
+.tile span { color: var(--muted); font-size: 0.9rem; }
+
+/* ---------- Tables (leaderboard and profile) ---------- */
+.table-wrap { overflow-x: auto; border-radius: 14px; box-shadow: var(--shadow); }
+table { width: 100%; border-collapse: collapse; background: #fff; }
+th {
+  background: var(--ink); color: var(--yellow); text-align: left; padding: 12px 14px;
+  font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;
+}
+td { padding: 12px 14px; border-top: 1px solid #f3f4f6; }
+tbody tr:hover { background: #fffbea; }
+.lb tbody tr:nth-child(1) { background: #fff6cc; font-weight: 700; }
+.lb tbody tr:nth-child(1) td:first-child::before { content: '🥇 '; }
+.lb tbody tr:nth-child(2) td:first-child::before { content: '🥈 '; }
+.lb tbody tr:nth-child(3) td:first-child::before { content: '🥉 '; }
+.summary {
+  background: var(--ink); color: #fff; border-radius: 14px; padding: 16px 20px;
+  font-weight: 700; margin: 16px 0;
+}
+
+@media (max-width: 520px) {
+  h1 { font-size: 1.6rem; }
+  .row { flex-direction: column; }
+}

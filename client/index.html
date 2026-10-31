@@ -2,16 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Banana Duel Arena</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍌</text></svg>">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <h1>🍌 Banana Duel Arena</h1>
-  <input id="username" placeholder="Username">
-  <input id="password" type="password" placeholder="Password">
-  <button id="login-btn">Log in</button>
-  <button id="register-btn">Register</button>
-  <p id="message"></p>
+  <div class="auth-wrap">
+    <div class="card auth-card">
+      <div class="logo">🍌</div>
+      <h1>Banana Duel Arena</h1>
+      <p class="subtitle">Race a friend to solve the banana puzzle first.</p>
+      <div class="stack">
+        <input id="username" placeholder="Username" autocomplete="username">
+        <input id="password" type="password" placeholder="Password" autocomplete="current-password">
+        <div class="row">
+          <button id="login-btn">Log in</button>
+          <button id="register-btn" class="btn-secondary">Register</button>
+        </div>
+      </div>
+      <p id="message" class="msg"></p>
+    </div>
+  </div>
   <script src="js/auth.js"></script>
 </body>
 </html>

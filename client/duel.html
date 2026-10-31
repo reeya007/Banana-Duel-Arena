@@ -2,29 +2,53 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Duel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Duel | Banana Duel Arena</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍌</text></svg>">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <h1>⚔️ Duel</h1>
-  <a href="home.html">← Back to home</a>
-  <hr>
-  <button id="find-btn">Quick match</button>
-  <p id="status"></p>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="home.html">🍌 Banana Duel Arena</a>
+      <a class="link" href="home.html">Practice</a>
+      <a class="link active" href="duel.html">Duel</a>
+      <a class="link" href="leaderboard.html">Leaderboard</a>
+      <a class="link" href="profile.html">Profile</a>
+      <span id="welcome"></span>
+      <button id="logout-btn" class="btn-ghost">Log out</button>
+    </div>
+  </nav>
 
-  <div id="arena" hidden>
-    <p id="scoreboard"></p>
-    <p id="round-info"></p>
-    <p id="timer"></p>
-    <img id="puzzle" alt="Banana puzzle" width="400">
-    <br>
-    <input id="answer" type="number" min="0" max="9" placeholder="0-9">
-    <button id="submit-btn">Submit</button>
-    <p id="opponent"></p>
-    <p id="feedback"></p>
-  </div>
+  <main class="container">
+    <div class="card center">
+      <h1>Duel arena</h1>
+      <p class="subtitle">Race another player to solve the same banana puzzle.</p>
+      <div class="chips">
+        <span class="chip">Best of 5</span>
+        <span class="chip">30 seconds per round</span>
+        <span class="chip">Wrong answer = 3s lockout</span>
+      </div>
+      <button id="find-btn" class="btn-big">Quick match</button>
+      <p id="status" class="status-line"></p>
+    </div>
+
+    <div id="arena" class="card" hidden>
+      <p id="scoreboard" class="scoreboard"></p>
+      <p id="round-info" class="round-info"></p>
+      <p id="timer" class="timer"></p>
+      <div class="puzzle-box"><img id="puzzle" alt="Banana puzzle"></div>
+      <div class="answer-row">
+        <input id="answer" type="number" min="0" max="9" placeholder="0-9">
+        <button id="submit-btn">Submit</button>
+      </div>
+      <p id="opponent" class="note"></p>
+      <p id="feedback" class="feedback"></p>
+    </div>
+  </main>
 
   <script src="/socket.io/socket.io.js"></script>
+  <script src="js/ui.js"></script>
   <script src="js/duel.js"></script>
 </body>
 </html>

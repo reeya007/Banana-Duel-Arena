@@ -1,4 +1,3 @@
-// Quick match queue: the first player waits, the second player starts a match with them.
 const Match = require('./Match');
 
 let waiting = null;          // socket of the player waiting for an opponent
@@ -41,10 +40,17 @@ function handleAnswer(socket, data) {
   if (match) match.submit(socket, data && data.answer);
 }
 
+// A socket dropped: the match starts a reconnect countdown instead of forfeiting at once
 function handleDisconnect(socket) {
   if (waiting && waiting.id === socket.id) waiting = null;
   const match = getMatch(socket);
-  if (match) match.forfeit(socket);
+  if (match) match.playerDisconnected(socket);
 }
 
-module.exports = { join, handleAnswer, handleDisconnect };
+// A logged-in user connected: if they have a running match, put them back in it
+function handleReconnect(socket) {
+  const match = getMatch(socket);
+  return match ? match.rejoin(socket) : false;
+}
+
+module.exports = { join, handleAnswer, handleDisconnect, handleReconnect };

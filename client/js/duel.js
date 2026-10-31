@@ -3,6 +3,7 @@
 const $ = (id) => document.getElementById(id);
 const socket = io();
 let countdown = null;
+let reconnectTimer = null;
 
 function showScores(scores) {
   $('scoreboard').textContent = scores.map((s) => `${s.username}: ${s.score}`).join('   |   ');
@@ -87,6 +88,7 @@ socket.on('round:end', ({ winner, scores, solution }) => {
 socket.on('api:error', ({ message }) => { $('status').textContent = message; });
 
 socket.on('match:end', ({ winner, scores, reason, ratingChange, newRating }) => {
+      clearInterval(reconnectTimer);
   clearInterval(countdown);
   setInputEnabled(false);
   showScores(scores);
@@ -104,4 +106,40 @@ socket.on('match:end', ({ winner, scores, reason, ratingChange, newRating }) => 
 socket.on('error:msg', ({ message }) => {
   $('status').textContent = message;
   $('find-btn').disabled = false;
+});
+socket.on('opponent:disconnected', ({ seconds }) => {
+  let left = seconds;
+  clearInterval(reconnectTimer);
+  $('opponent').textContent = `Opponent disconnected. Waiting ${left}s for them to come back...`;
+  reconnectTimer = setInterval(() => {
+    left--;
+    if (left <= 0) { clearInterval(reconnectTimer); return; }
+    $('opponent').textContent = `Opponent disconnected. Waiting ${left}s for them to come back...`;
+  }, 1000);
+});
+
+socket.on('opponent:reconnected', () => {
+  clearInterval(reconnectTimer);
+  $('opponent').textContent = 'Opponent is back!';
+});
+
+// Sent to a player who reconnected: rebuild the duel screen from the server's state
+socket.on('match:resume', ({ opponent, round, image, durationMs, scores, lockMs }) => {
+  $('find-btn').disabled = true;
+  $('arena').hidden = false;
+  $('status').textContent = `Reconnected to your match against ${opponent}.`;
+  $('round-info').textContent = `Round ${round} of 5`;
+  showScores(scores);
+  if (image) {
+    $('puzzle').src = image;
+    startCountdown(durationMs);
+    if (lockMs > 0) {
+      setInputEnabled(false);
+      setTimeout(() => setInputEnabled(true), lockMs);
+    } else {
+      setInputEnabled(true);
+    }
+  } else {
+    setInputEnabled(false); // between rounds: wait for the next round
+  }
 });

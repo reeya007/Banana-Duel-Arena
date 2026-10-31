@@ -15,7 +15,7 @@ Same puzzle sent to both players at the same moment Done
 Results saved, Elo ratings (K = 32), top-20 leaderboard Done
 Profile page with match history and win rate Done
 API timeout (5 s), one retry and friendly error messages Done
-15-second reconnect before forfeit Planned
+15-second reconnect before forfeit Done
 Bonus trivia question (Open Trivia DB) Planned
 Private rooms with a share code Not built
 Technologies Used
@@ -94,7 +94,6 @@ Known Limitations
 Running locally uses plain HTTP, so cookies are not encrypted in transit
 A single server is a single point of failure
 Match state is held in memory and is lost if the server restarts
-A disconnect forfeits immediately
 If the Banana API is down during a duel, the server retries every 5 seconds
 Credits
 Puzzles come from the Banana API by Marc Conrad (marcconrad.com/uob/banana)

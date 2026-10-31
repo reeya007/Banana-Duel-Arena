@@ -23,6 +23,9 @@ module.exports = function setupSocket(httpServer, sessionMiddleware) {
   io.on('connection', (socket) => {
     console.log(`[Socket] connected: ${socket.username} (${socket.id})`);
 
+    // If this user has a match in progress, put them back into it
+    matchmaker.handleReconnect(socket);
+
     socket.on('queue:join', () => matchmaker.join(io, socket));
     socket.on('answer:submit', (data) => matchmaker.handleAnswer(socket, data));
     socket.on('disconnect', () => {

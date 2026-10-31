@@ -1,10 +1,11 @@
 const { getPuzzle } = require('../services/bananaService');
 const { saveMatchResult } = require('./saveResult');
 
-const ROUND_MS = 30000;   // 30 second limit per round
-const LOCK_MS = 3000;     // lockout after a wrong answer
-const WINS_NEEDED = 3;    // best of 5
+const ROUND_MS = 30000;      // 30 second limit per round
+const LOCK_MS = 3000;        // lockout after a wrong answer
+const WINS_NEEDED = 3;       // best of 5
 const MAX_ROUNDS = 5;
+const RECONNECT_MS = 15000;  // how long a disconnected player has to come back
 
 class Match {
   constructor(io, roomId, socketA, socketB, onEnd) {
@@ -17,6 +18,8 @@ class Match {
       socketId: s.id,
       score: 0,
       lockedUntil: 0,
+      disconnected: false,
+      dcTimer: null,
     }));
     this.round = 0;
     this.solution = null;
@@ -122,12 +125,44 @@ class Match {
     else setTimeout(() => this.nextRound(), 4000);
   }
 
-  // If a player disconnects, the opponent wins (15-second reconnect comes later)
-  forfeit(socket) {
+  // A player's socket dropped: start the reconnect countdown instead of forfeiting at once
+  playerDisconnected(socket) {
     if (this.ended) return;
     const idx = this.players.findIndex((p) => p.socketId === socket.id);
-    if (idx === -1) return;
-    this.endMatch(1 - idx, 'opponent left');
+    if (idx === -1) return; // stale socket: this player already came back on a new one
+    const player = this.players[idx];
+    player.disconnected = true;
+    const opp = this.players[1 - idx];
+    this.io.to(opp.socketId).emit('opponent:disconnected', { seconds: RECONNECT_MS / 1000 });
+    console.log(`[Match] ${player.username} disconnected, waiting ${RECONNECT_MS / 1000}s`);
+    // Timer event: if they do not return in time, the opponent wins
+    player.dcTimer = setTimeout(() => this.endMatch(1 - idx, 'opponent left'), RECONNECT_MS);
+  }
+
+  // A logged-in user connected while their match is still running: put them back in
+  rejoin(socket) {
+    if (this.ended) return false;
+    const idx = this.players.findIndex((p) => p.userId === socket.userId);
+    if (idx === -1) return false;
+    const player = this.players[idx];
+    clearTimeout(player.dcTimer);
+    player.dcTimer = null;
+    player.disconnected = false;
+    player.socketId = socket.id; // the user ID comes from the session, so nobody can take another player's seat
+    socket.join(this.roomId);
+    console.log(`[Match] ${player.username} reconnected`);
+
+    const opp = this.players[1 - idx];
+    this.io.to(opp.socketId).emit('opponent:reconnected');
+    socket.emit('match:resume', {
+      opponent: opp.username,
+      round: this.round,
+      image: this.roundActive ? this.puzzleUrl : null,
+      durationMs: this.roundActive ? Math.max(0, this.roundStart + ROUND_MS - Date.now()) : 0,
+      scores: this.scores(),
+      lockMs: Math.max(0, player.lockedUntil - Date.now()),
+    });
+    return true;
   }
 
   endMatch(forcedWinnerIdx = null, reason = 'finished') {
@@ -135,6 +170,7 @@ class Match {
     this.ended = true;
     this.roundActive = false;
     clearTimeout(this.timer);
+    this.players.forEach((p) => clearTimeout(p.dcTimer)); // stop any reconnect countdown
 
     const [a, b] = this.players;
     let winnerIdx = null;
@@ -151,6 +187,7 @@ class Match {
         startedAt: this.startedAt,
         rounds: this.roundLog,
       });
+      console.log(`[DB] match saved: ${a.username} vs ${b.username}, ratings ${result.newA} / ${result.newB}`);
     } catch (err) {
       console.error('[DB] could not save match result:', err.message);
     }
